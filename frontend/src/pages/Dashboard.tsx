@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { wallets, rpc, chains } from '../api';
 import { formatEther } from 'viem';
-import { Wallet, Send, Download, Plus, LogOut, Copy, ExternalLink, Coins } from 'lucide-react';
+import { Send, Download, Plus, Copy, ExternalLink, Coins } from 'lucide-react';
 
 interface Chain {
   id: number;
@@ -21,13 +21,12 @@ export function Dashboard() {
   const [walletsList, setWalletsList] = useState<WalletData[]>([]);
   const [chainList, setChainList] = useState<Chain[]>([]);
   const [selectedWallet, setSelectedWallet] = useState<WalletData | null>(null);
-  const [selectedChain, setSelectedChain] = useState(1); // Ethereum mainnet - real balances
+  const [selectedChain, setSelectedChain] = useState(1);
   const [balance, setBalance] = useState<bigint | null>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
   const [balanceError, setBalanceError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
-  const navigate = useNavigate();
 
   const loadData = async () => {
     try {
@@ -64,12 +63,6 @@ export function Dashboard() {
       .finally(() => setBalanceLoading(false));
   }, [selectedWallet, selectedChain]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login');
-  };
-
   const copyAddress = () => {
     if (!selectedWallet) return;
     navigator.clipboard.writeText(selectedWallet.address);
@@ -81,143 +74,140 @@ export function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full" />
+      <div className="flex items-center justify-center py-24">
+        <div className="w-10 h-10 border-2 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)]">
-      <header className="border-b border-[var(--border)] px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Wallet className="w-8 h-8 text-indigo-500" />
-          <span className="font-bold text-lg">Lykos Wallet</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <select
-            value={selectedChain}
-            onChange={(e) => setSelectedChain(Number(e.target.value))}
-            className="bg-[var(--bg-secondary)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm"
-          >
-            {chainList.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 text-[var(--text-muted)] hover:text-white"
-          >
-            <LogOut className="w-5 h-5" />
-            <span className="hidden sm:inline">Logout</span>
-          </button>
-        </div>
-      </header>
-
-      <main className="max-w-lg mx-auto px-4 py-8">
-        {walletsList.length === 0 ? (
-          <div className="bg-[var(--bg-secondary)] rounded-2xl p-8 border border-[var(--border)] text-center">
-            <p className="text-[var(--text-muted)] mb-6">No wallets yet. Create or import one to get started.</p>
-            <div className="flex gap-4 justify-center">
+    <div>
+      {walletsList.length === 0 ? (
+        <div className="max-w-md mx-auto">
+          <div className="bg-[var(--bg-card)] rounded-2xl p-10 border border-[var(--border)] text-center">
+            <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center mx-auto mb-6">
+              <Plus className="w-8 h-8 text-cyan-400" />
+            </div>
+            <h2 className="text-xl font-semibold mb-2">No wallets yet</h2>
+            <p className="text-[var(--text-secondary)] mb-8">Create or import a wallet to get started</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/wallet/create"
-                className="flex items-center gap-2 px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500"
+                className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl gradient-accent text-slate-900 font-semibold shadow-lg shadow-cyan-500/20 hover:opacity-90 transition"
               >
                 <Plus className="w-5 h-5" />
                 Create Wallet
               </Link>
               <Link
                 to="/wallet/import"
-                className="flex items-center gap-2 px-6 py-3 rounded-lg border border-[var(--border)] hover:bg-[var(--bg-secondary)]"
+                className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-[var(--border)] text-[var(--text-primary)] hover:bg-[var(--bg-card)] hover:border-cyan-500/30 transition font-medium"
               >
                 <Download className="w-5 h-5" />
                 Import Wallet
               </Link>
             </div>
           </div>
-        ) : (
-          <>
-            <div className="mb-6">
-              <label className="block text-sm text-[var(--text-muted)] mb-2">Wallet</label>
+        </div>
+      ) : (
+        <>
+          <div className="flex gap-4 mb-6 flex-wrap">
+            <div className="flex-1 min-w-[200px]">
+              <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Wallet</label>
               <select
                 value={selectedWallet?.id || ''}
                 onChange={(e) => setSelectedWallet(walletsList.find((w) => w.id === e.target.value) || null)}
-                className="w-full bg-[var(--bg-secondary)] border border-[var(--border)] rounded-lg px-4 py-3 flex items-center"
+                className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] focus:border-[var(--border-focus)] focus:ring-2 focus:ring-cyan-500/20 transition"
               >
                 {walletsList.map((w) => (
-                  <option key={w.id} value={w.id}>{w.name} - {w.address.slice(0, 6)}...{w.address.slice(-4)}</option>
+                  <option key={w.id} value={w.id}>{w.name} — {w.address.slice(0, 6)}...{w.address.slice(-4)}</option>
                 ))}
               </select>
             </div>
+            <div className="min-w-[140px]">
+              <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Network</label>
+              <select
+                value={selectedChain}
+                onChange={(e) => setSelectedChain(Number(e.target.value))}
+                className="w-full bg-[var(--bg-input)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] focus:border-[var(--border-focus)] focus:ring-2 focus:ring-cyan-500/20 transition"
+              >
+                {chainList.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-            <div className="bg-[var(--bg-secondary)] rounded-2xl p-8 border border-[var(--border)] mb-6">
-              <p className="text-[var(--text-muted)] text-sm mb-1">
-                Balance — switch network above if your funds are on another chain
-              </p>
-              <p className="text-4xl font-bold mb-2">
-                {balanceLoading ? (
-                  <span className="text-[var(--text-muted)]">Loading...</span>
-                ) : balance !== null ? (
-                  `${parseFloat(formatEther(balance)).toFixed(6)} ${chainInfo?.symbol || 'ETH'}`
-                ) : (
-                  `— ${chainInfo?.symbol || 'ETH'}`
-                )}
-              </p>
-              {balanceError && (
-                <p className="text-red-400 text-sm mt-1">{balanceError}</p>
+          <div className="bg-[var(--bg-card)] rounded-2xl p-8 border border-[var(--border)] mb-6 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-cyan-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+            <p className="text-[var(--text-secondary)] text-sm mb-1">
+              Balance — switch network if your funds are on another chain
+            </p>
+            <p className="text-4xl font-bold mb-4">
+              {balanceLoading ? (
+                <span className="text-[var(--text-muted)]">Loading...</span>
+              ) : balance !== null ? (
+                <span>{parseFloat(formatEther(balance)).toFixed(6)} <span className="text-cyan-400">{chainInfo?.symbol || 'ETH'}</span></span>
+              ) : (
+                <span>— {chainInfo?.symbol || 'ETH'}</span>
               )}
-              <div className="flex items-center gap-2">
-                <code className="text-sm text-[var(--text-muted)] font-mono bg-[var(--bg-primary)] px-3 py-1 rounded">
-                  {selectedWallet?.address}
-                </code>
-                <button onClick={copyAddress} className="p-1 hover:bg-[var(--bg-primary)] rounded">
-                  <Copy className="w-4 h-4" />
-                </button>
-                {chainInfo && (
-                  <a
-                    href={`${chainInfo.explorer}/address/${selectedWallet?.address}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-1 hover:bg-[var(--bg-primary)] rounded"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                )}
-                {copied && <span className="text-green-400 text-sm">Copied!</span>}
-              </div>
+            </p>
+            {balanceError && <p className="text-[var(--error)] text-sm mt-1">{balanceError}</p>}
+            <div className="flex items-center gap-2 flex-wrap">
+              <code className="text-sm text-[var(--text-muted)] font-mono bg-[var(--bg-input)] px-3 py-2 rounded-lg">
+                {selectedWallet?.address}
+              </code>
+              <button
+                onClick={copyAddress}
+                className="p-2 rounded-lg hover:bg-[var(--bg-input)] text-[var(--text-secondary)] hover:text-cyan-400 transition"
+                title="Copy"
+              >
+                <Copy className="w-4 h-4" />
+              </button>
+              {chainInfo && (
+                <a
+                  href={`${chainInfo.explorer}/address/${selectedWallet?.address}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg hover:bg-[var(--bg-input)] text-[var(--text-secondary)] hover:text-cyan-400 transition"
+                  title="View on explorer"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              )}
+              {copied && <span className="text-[var(--success)] text-sm font-medium">Copied!</span>}
             </div>
+          </div>
 
-            <div className="flex gap-4 flex-wrap">
-              <Link
-                to="/send"
-                className="flex-1 min-w-[100px] flex items-center justify-center gap-2 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-medium"
-              >
-                <Send className="w-5 h-5" />
-                Send
-              </Link>
-              <Link
-                to="/receive"
-                className="flex-1 min-w-[100px] flex items-center justify-center gap-2 py-4 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-secondary)] font-medium"
-              >
-                <Download className="w-5 h-5" />
-                Receive
-              </Link>
-              <Link
-                to="/assets"
-                className="flex-1 min-w-[100px] flex items-center justify-center gap-2 py-4 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-secondary)] font-medium"
-              >
-                <Coins className="w-5 h-5" />
-                Assets
-              </Link>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <Link
+              to="/send"
+              className="flex items-center justify-center gap-3 py-5 rounded-xl gradient-accent text-slate-900 font-semibold shadow-lg shadow-cyan-500/20 hover:opacity-90 transition"
+            >
+              <Send className="w-5 h-5" />
+              Send
+            </Link>
+            <Link
+              to="/receive"
+              className="flex items-center justify-center gap-3 py-5 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-card)] hover:border-cyan-500/30 transition font-medium"
+            >
+              <Download className="w-5 h-5" />
+              Receive
+            </Link>
+            <Link
+              to="/assets"
+              className="flex items-center justify-center gap-3 py-5 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-card)] hover:border-cyan-500/30 transition font-medium"
+            >
+              <Coins className="w-5 h-5" />
+              Assets
+            </Link>
+          </div>
 
-            <div className="mt-8 flex gap-4">
-              <Link to="/wallet/create" className="text-indigo-500 hover:underline text-sm">+ Add wallet</Link>
-              <Link to="/wallet/import" className="text-indigo-500 hover:underline text-sm">Import wallet</Link>
-            </div>
-          </>
-        )}
-      </main>
+          <div className="flex gap-6">
+            <Link to="/wallet/create" className="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition">+ Add wallet</Link>
+            <Link to="/wallet/import" className="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition">Import wallet</Link>
+          </div>
+        </>
+      )}
     </div>
   );
 }

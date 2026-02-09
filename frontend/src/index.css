@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --bg-base: #07090e;
+  --bg-elevated: #0d1117;
+  --bg-card: #131920;
+  --bg-input: #0d1117;
+  --border: #1e2836;
+  --border-focus: #22d3ee;
+  --accent: #22d3ee;
+  --accent-hover: #67e8f9;
+  --accent-muted: rgba(34, 211, 238, 0.15);
+  --text-primary: #f0f6fc;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+  --success: #3fb950;
+  --error: #f85149;
+  --warning: #d29922;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Outfit', system-ui, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Legacy vars for backwards compat */
+:root {
+  --bg-primary: var(--bg-base);
+  --bg-secondary: var(--bg-elevated);
+  --accent-hover: var(--accent-hover);
+  --text-muted: var(--text-muted);
+}
+
+/* Focus styles - Tailwind focus:ring handles most cases */
+
+input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Card hover */
+.card-hover {
+  transition: background 0.2s, border-color 0.2s;
+}
+.card-hover:hover {
+  background: var(--bg-card);
+  border-color: var(--border);
+}
+
+/* Gradient accent */
+.gradient-accent {
+  background: linear-gradient(135deg, #22d3ee 0%, #0ea5e9 100%);
+}
+.gradient-accent:hover {
+  background: linear-gradient(135deg, #67e8f9 0%, #38bdf8 100%);
+}

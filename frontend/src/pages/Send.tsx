@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { wallets, rpc, chains, tokens } from '../api';
 import { mnemonicToAccount, privateKeyToAccount } from 'viem/accounts';
 import { parseEther } from 'viem';
-import { ArrowLeft } from 'lucide-react';
 
 interface WalletData {
   id: string;
@@ -117,9 +116,11 @@ export function Send() {
 
   if (txHash) {
     return (
-      <div className="min-h-screen bg-[var(--bg-primary)] px-4 py-8">
-        <div className="max-w-md mx-auto text-center">
-          <div className="text-green-400 text-6xl mb-4">✓</div>
+      <div className="max-w-md mx-auto">
+        <div className="bg-[var(--bg-card)] rounded-2xl p-8 border border-[var(--border)] text-center">
+          <div className="w-16 h-16 rounded-full bg-[var(--success)]/20 flex items-center justify-center mx-auto mb-6">
+            <span className="text-3xl text-[var(--success)]">✓</span>
+          </div>
           <h1 className="text-xl font-semibold mb-2">Transaction sent</h1>
           <p className="text-[var(--text-muted)] mb-4 break-all font-mono text-sm">{txHash}</p>
           {chain && (
@@ -127,14 +128,14 @@ export function Send() {
               href={`${chain.explorer}/tx/${txHash}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-indigo-500 hover:underline"
+              className="text-cyan-400 hover:text-cyan-300 font-medium"
             >
               View on explorer →
             </a>
           )}
           <button
             onClick={() => navigate('/')}
-            className="mt-8 w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500"
+            className="mt-8 w-full py-3 rounded-xl gradient-accent text-slate-900 font-semibold shadow-lg shadow-cyan-500/20"
           >
             Back to wallet
           </button>
@@ -144,89 +145,84 @@ export function Send() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] px-4 py-8">
-      <Link to="/" className="flex items-center gap-2 text-[var(--text-muted)] hover:text-white mb-8">
-        <ArrowLeft className="w-5 h-5" />
-        Back
-      </Link>
-      <div className="max-w-md mx-auto">
-        <h1 className="text-xl font-semibold mb-6">
-          Send {tokenAddress ? 'Token' : chain?.symbol || 'ETH'}
-        </h1>
-        {tokenAddress && (
-          <div className="mb-4 p-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)]">
-            <p className="text-xs text-[var(--text-muted)]">Token contract</p>
-            <p className="font-mono text-sm truncate">{tokenAddress}</p>
-          </div>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-2">From</label>
-            <select
-              value={selectedWallet?.id || ''}
-              onChange={(e) => setSelectedWallet(walletsList.find((w) => w.id === e.target.value) || null)}
-              className="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)]"
-            >
-              {walletsList.map((w) => (
-                <option key={w.id} value={w.id}>{w.name} ({w.address.slice(0, 6)}...{w.address.slice(-4)})</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-2">Network</label>
-            <select
-              value={chainId}
-              onChange={(e) => setChainId(Number(e.target.value))}
-              className="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)]"
-            >
-              {chainList.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-2">Recipient address</label>
-            <input
-              type="text"
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)] font-mono"
-              placeholder="0x..."
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-2">Amount ({chain?.symbol || 'ETH'})</label>
-            <input
-              type="text"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)]"
-              placeholder="0.0"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-[var(--text-muted)] mb-2">Wallet password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)]"
-              placeholder="Enter password to sign"
-              required
-            />
-          </div>
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-medium disabled:opacity-50"
+    <div className="max-w-md">
+      <h1 className="text-xl font-semibold mb-2">Send {tokenAddress ? 'Token' : chain?.symbol || 'ETH'}</h1>
+      <p className="text-[var(--text-secondary)] text-sm mb-6">Transfer to any EVM address</p>
+
+      {tokenAddress && (
+        <div className="mb-6 p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
+          <p className="text-xs text-[var(--text-muted)] mb-1">Token contract</p>
+          <p className="font-mono text-sm truncate">{tokenAddress}</p>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">From</label>
+          <select
+            value={selectedWallet?.id || ''}
+            onChange={(e) => setSelectedWallet(walletsList.find((w) => w.id === e.target.value) || null)}
+            className="w-full px-4 py-3 rounded-xl bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] focus:border-[var(--border-focus)] focus:ring-2 focus:ring-cyan-500/20 transition"
           >
-            {loading ? 'Sending...' : 'Send'}
-          </button>
-        </form>
-      </div>
+            {walletsList.map((w) => (
+              <option key={w.id} value={w.id}>{w.name} ({w.address.slice(0, 6)}...{w.address.slice(-4)})</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Network</label>
+          <select
+            value={chainId}
+            onChange={(e) => setChainId(Number(e.target.value))}
+            className="w-full px-4 py-3 rounded-xl bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] focus:border-[var(--border-focus)] focus:ring-2 focus:ring-cyan-500/20 transition"
+          >
+            {chainList.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Recipient address</label>
+          <input
+            type="text"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            className="w-full px-4 py-3 rounded-xl bg-[var(--bg-input)] border border-[var(--border)] font-mono text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--border-focus)] focus:ring-2 focus:ring-cyan-500/20 transition"
+            placeholder="0x..."
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Amount ({chain?.symbol || 'ETH'})</label>
+          <input
+            type="text"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="w-full px-4 py-3 rounded-xl bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--border-focus)] focus:ring-2 focus:ring-cyan-500/20 transition"
+            placeholder="0.0"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Wallet password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-4 py-3 rounded-xl bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--border-focus)] focus:ring-2 focus:ring-cyan-500/20 transition"
+            placeholder="Enter password to sign"
+            required
+          />
+        </div>
+        {error && <p className="text-[var(--error)] text-sm">{error}</p>}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-3 rounded-xl gradient-accent text-slate-900 font-semibold shadow-lg shadow-cyan-500/20 hover:opacity-90 disabled:opacity-50 transition"
+        >
+          {loading ? 'Sending...' : 'Send'}
+        </button>
+      </form>
     </div>
   );
 }

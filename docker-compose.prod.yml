@@ -1,0 +1,63 @@
+# Lykos Wallet - Production deployment
+# Usage: set required env vars, then: docker compose -f docker-compose.prod.yml up -d
+#
+# Required env vars (create .env or export):
+#   POSTGRES_PASSWORD  - PostgreSQL password (use a strong one)
+#   JWT_SECRET         - Random secret for JWT (e.g. openssl rand -base64 32)
+#   CORS_ORIGIN        - Allowed origins, e.g. https://wallet.yourdomain.com
+#
+# Optional RPC URLs (defaults to public endpoints):
+#   ETHEREUM_RPC_URL   - Ethereum mainnet RPC (QuickNode, Alchemy, etc.)
+#   SEPOLIA_RPC_URL    - Sepolia testnet RPC
+#   ALCHEMY_API_KEY    - Alchemy API key (enables all chains if set)
+#
+# Optional API keys for block explorers / NFT indexing:
+#   ETHERSCAN_API_KEY, ALCHEMY_API_KEY
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: lykos_prod
+      POSTGRES_USER: lykos
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD required}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lykos -d lykos_prod"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://lykos:${POSTGRES_PASSWORD}@postgres:5432/lykos_prod
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET required}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost}
+      ETHEREUM_RPC_URL: ${ETHEREUM_RPC_URL:-}
+      SEPOLIA_RPC_URL: ${SEPOLIA_RPC_URL:-}
+      OPTIMISM_RPC_URL: ${OPTIMISM_RPC_URL:-}
+      POLYGON_RPC_URL: ${POLYGON_RPC_URL:-}
+      BASE_RPC_URL: ${BASE_RPC_URL:-}
+      ARBITRUM_RPC_URL: ${ARBITRUM_RPC_URL:-}
+      ALCHEMY_API_KEY: ${ALCHEMY_API_KEY:-}
+    ports:
+      - "3000:3000"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: /api
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  postgres_data:
