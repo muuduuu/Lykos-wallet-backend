@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: lykos
       POSTGRES_PASSWORD: devpassword
     ports:
-      - "5433:5432"  # Host:Container - use localhost:5433 from host
+      - "5434:5432"  # Host:Container - use localhost:5434 from host
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
