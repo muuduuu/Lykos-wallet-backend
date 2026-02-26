@@ -23,7 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           >
             <img src="/Lykos.png" alt="Lykos" className="w-9 h-9 rounded-lg shadow-md shadow-cyan-500/20 group-hover:shadow-cyan-500/30 transition" />
             <span className="text-lg font-semibold text-[var(--text-primary)] tracking-tight">
-              Lykos Wallet
+              LyKos Wallet
             </span>
           </Link>
 
@@ -65,7 +65,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </main>
 
       <footer className="border-t border-[var(--border)] py-4 text-center text-sm text-[var(--text-muted)]">
-        © Lykos 2026. All rights reserved.
+        © LyKos 2026. All rights reserved.
       </footer>
     </div>
   );
