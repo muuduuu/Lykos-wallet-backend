@@ -192,6 +192,7 @@ export function Send() {
             onChange={(e) => setTo(e.target.value)}
             className="w-full px-4 py-3 rounded-xl bg-[var(--bg-input)] border border-[var(--border)] font-mono text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--border-focus)] focus:ring-2 focus:ring-cyan-500/20 transition"
             placeholder="0x..."
+            autoComplete="off"
             required
           />
         </div>
@@ -203,6 +204,7 @@ export function Send() {
             onChange={(e) => setAmount(e.target.value)}
             className="w-full px-4 py-3 rounded-xl bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--border-focus)] focus:ring-2 focus:ring-cyan-500/20 transition"
             placeholder="0.0"
+            autoComplete="off"
             required
           />
         </div>
@@ -214,6 +216,7 @@ export function Send() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-3 rounded-xl bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--border-focus)] focus:ring-2 focus:ring-cyan-500/20 transition"
             placeholder="Enter password to sign"
+            autoComplete="current-password"
             required
           />
         </div>
