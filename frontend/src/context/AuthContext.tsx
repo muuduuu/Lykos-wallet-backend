@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
-import { auth, type User } from "../lib/api";
+import { auth, type User } from "../api";
 
 type AuthContextValue = {
   user: User | null;
@@ -32,8 +32,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
     try {
-      const u = await auth.me();
-      setUser(u);
+      const res = await auth.me();
+      setUser(res.data);
     } catch {
       setToken(null);
       setUser(null);
@@ -48,18 +48,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(
     async (email: string, password: string) => {
-      const { user: u, token: t } = await auth.login(email, password);
-      setToken(t);
-      setUser(u);
+      const { data } = await auth.login(email, password);
+      setToken(data.token);
+      setUser(data.user);
     },
     [setToken]
   );
 
   const register = useCallback(
     async (email: string, password: string, name?: string) => {
-      const { user: u, token: t } = await auth.register(email, password, name);
-      setToken(t);
-      setUser(u);
+      const { data } = await auth.register(email, password, name);
+      setToken(data.token);
+      setUser(data.user);
     },
     [setToken]
   );
