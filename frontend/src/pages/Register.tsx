@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../api';
+import { useAuth } from '../context/AuthContext';
 
 export function Register() {
   const [email, setEmail] = useState('');
@@ -9,15 +9,14 @@ export function Register() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { register } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     try {
-      const { data } = await auth.register(email, password, name || undefined);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      await register(email, password, name || undefined);
       navigate('/');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Registration failed');

@@ -31,6 +31,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       return;
     }
+    // Skip fetch if we already have a user (e.g. just logged in)
+    if (user) {
+      setLoading(false);
+      return;
+    }
     try {
       const res = await auth.me();
       setUser(res.data);
@@ -40,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [setToken]);
+  }, [setToken, user]);
 
   useEffect(() => {
     loadUser();
