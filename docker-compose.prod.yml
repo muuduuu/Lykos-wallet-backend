@@ -64,7 +64,7 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - certbot_webroot:/var/www/certbot:ro
 
-  # Main site (lykoslabs.xyz) — Next.js
+  # Main site — Next.js
   site:
     build:
       context: ./site
