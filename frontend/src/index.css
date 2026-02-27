@@ -37,8 +37,11 @@ body {
 
 /* Focus styles - Tailwind focus:ring handles most cases */
 
-input::placeholder {
+input::placeholder,
+textarea::placeholder,
+select::placeholder {
   color: var(--text-muted);
+  opacity: 0.45;
 }
 
 /* Card hover */
