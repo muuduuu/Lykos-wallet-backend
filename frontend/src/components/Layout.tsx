@@ -21,10 +21,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             to="/"
             className="flex items-center gap-2 shrink-0 group"
           >
-            <img src="/Lykos.png" alt="Lykos" className="w-9 h-9 rounded-lg shadow-md shadow-cyan-500/20 group-hover:shadow-cyan-500/30 transition" />
-            <span className="text-lg font-semibold text-[var(--text-primary)] tracking-tight">
-              LyKos Wallet
-            </span>
+            <img src="/Lykos.png" alt="Carbon Crowd" className="w-9 h-9 rounded-lg shadow-md shadow-cyan-700/20 group-hover:shadow-cyan-700/30 transition" />
+            <div className="flex flex-col leading-tight">
+              <span className="text-lg font-semibold text-[var(--text-primary)] tracking-tight">Carbon Crowd Wallet</span>
+              <span className="text-[10px] text-[var(--text-muted)] tracking-wide">Powered by LyKos Labs</span>
+            </div>
           </Link>
 
           <nav className="flex items-center gap-1">
@@ -34,8 +35,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 to={to}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition ${
                   loc.pathname === to
-                    ? "bg-cyan-500/15 text-cyan-400"
-                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)]"
+                    ? "bg-cyan-600/10 text-cyan-700"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-input)]"
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -51,7 +52,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <button
               type="button"
               onClick={logout}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[var(--text-muted)] hover:text-[var(--error)] hover:bg-red-500/10 transition"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[var(--text-muted)] hover:text-[var(--error)] hover:bg-red-100 transition"
             >
               <LogOut className="w-4 h-4" />
               Log out
@@ -65,7 +66,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </main>
 
       <footer className="border-t border-[var(--border)] py-4 text-center text-sm text-[var(--text-muted)]">
-        © LyKos 2026. All rights reserved.
+        © Carbon Crowd 2026. Powered by LyKos Labs.
       </footer>
     </div>
   );

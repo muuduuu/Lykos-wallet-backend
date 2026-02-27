@@ -139,7 +139,7 @@ export function Assets() {
       <div className="bg-[var(--bg-card)] rounded-2xl p-6 border border-[var(--border)] mb-6">
         <p className="text-[var(--text-secondary)] text-sm mb-1">Native {chainInfo?.symbol || 'ETH'}</p>
         <p className="text-2xl font-bold">
-          {nativeBalance !== null ? parseFloat(formatEther(nativeBalance)).toFixed(6) : '—'} <span className="text-cyan-400">{chainInfo?.symbol}</span>
+          {nativeBalance !== null ? parseFloat(formatEther(nativeBalance)).toFixed(6) : '—'} <span className="text-cyan-700">{chainInfo?.symbol}</span>
         </p>
       </div>
 
@@ -147,7 +147,7 @@ export function Assets() {
         <button
           onClick={() => setTab('tokens')}
           className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-medium transition ${
-            tab === 'tokens' ? 'gradient-accent text-slate-900 shadow-lg shadow-cyan-500/20' : 'bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+            tab === 'tokens' ? 'gradient-accent shadow-lg shadow-cyan-700/20' : 'bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
           }`}
         >
           <Coins className="w-5 h-5" />
@@ -156,7 +156,7 @@ export function Assets() {
         <button
           onClick={() => setTab('nfts')}
           className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-medium transition ${
-            tab === 'nfts' ? 'gradient-accent text-slate-900 shadow-lg shadow-cyan-500/20' : 'bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+            tab === 'nfts' ? 'gradient-accent shadow-lg shadow-cyan-700/20' : 'bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
           }`}
         >
           <ImageIcon className="w-5 h-5" />
@@ -186,7 +186,7 @@ export function Assets() {
                   </div>
                   <Link
                     to={`/send?token=${t.tokenAddress}&chain=${selectedChain}`}
-                    className="text-cyan-400 text-sm font-medium hover:text-cyan-300 transition"
+                    className="text-cyan-700 text-sm font-medium hover:text-cyan-600 transition"
                   >
                     Send
                   </Link>
@@ -203,10 +203,10 @@ export function Assets() {
             </p>
 
             {nftError && (
-              <div className="rounded-lg bg-amber-900/30 border border-amber-700/50 p-4 text-sm">
-                <p className="text-amber-200">{nftError}</p>
+              <div className="rounded-lg bg-amber-50 border border-amber-300 p-4 text-sm">
+                <p className="text-amber-700">{nftError}</p>
                 {nftError.includes('ALCHEMY') && (
-                  <p className="mt-2 text-amber-300/80">
+                  <p className="mt-2 text-amber-600">
                     Add ALCHEMY_API_KEY to .env (free at alchemy.com). Or search by contract below.
                   </p>
                 )}
@@ -216,7 +216,7 @@ export function Assets() {
             <button
               type="button"
               onClick={() => setShowContractSearch(!showContractSearch)}
-              className="text-sm text-cyan-400 hover:text-cyan-300 font-medium transition"
+              className="text-sm text-cyan-700 hover:text-cyan-600 font-medium transition"
             >
               {showContractSearch ? '− Hide' : '+ Search by contract address'}
             </button>
@@ -233,7 +233,7 @@ export function Assets() {
                 <button
                   onClick={loadNftsByContract}
                   disabled={!nftContract.trim() || nftsLoading}
-                  className="px-4 py-3 rounded-xl gradient-accent text-slate-900 font-semibold disabled:opacity-50 transition"
+                  className="px-4 py-3 rounded-xl gradient-accent font-semibold disabled:opacity-50 transition"
                 >
                   Load
                 </button>

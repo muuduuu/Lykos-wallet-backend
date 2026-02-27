@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 import { auth, type User } from "../api";
 
 type AuthContextValue = {
@@ -17,6 +18,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setTokenState] = useState<string | null>(() => localStorage.getItem("token"));
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const setToken = useCallback((t: string | null) => {
     setTokenState(t);
@@ -68,7 +70,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(null);
     setUser(null);
     localStorage.removeItem("user");
-  }, [setToken]);
+    navigate("/login");
+  }, [setToken, navigate]);
 
   const value: AuthContextValue = {
     user,

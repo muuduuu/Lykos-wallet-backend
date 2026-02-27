@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { wallets, rpc, chains } from '../api';
 import { formatEther } from 'viem';
 import { Send, Download, Plus, Copy, ExternalLink, Coins } from 'lucide-react';
+import { copyToClipboard, getUsdPrice } from '../utils';
 
 interface Chain {
   id: number;
@@ -27,6 +28,7 @@ export function Dashboard() {
   const [balanceError, setBalanceError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [usdPrice, setUsdPrice] = useState<number | null>(null);
 
   const loadData = async () => {
     try {
@@ -63,11 +65,19 @@ export function Dashboard() {
       .finally(() => setBalanceLoading(false));
   }, [selectedWallet, selectedChain]);
 
-  const copyAddress = () => {
+  // Fetch USD price whenever selected chain changes
+  useEffect(() => {
+    if (!chainInfo) return;
+    getUsdPrice(chainInfo.symbol).then(setUsdPrice);
+  }, [selectedChain, chainList]);
+
+  const copyAddress = async () => {
     if (!selectedWallet) return;
-    navigator.clipboard.writeText(selectedWallet.address);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    const ok = await copyToClipboard(selectedWallet.address);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   const chainInfo = chainList.find((c) => c.id === selectedChain);
@@ -85,22 +95,22 @@ export function Dashboard() {
       {walletsList.length === 0 ? (
         <div className="max-w-md mx-auto">
           <div className="bg-[var(--bg-card)] rounded-2xl p-10 border border-[var(--border)] text-center">
-            <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center mx-auto mb-6">
-              <Plus className="w-8 h-8 text-cyan-400" />
+            <div className="w-16 h-16 rounded-2xl bg-cyan-600/10 flex items-center justify-center mx-auto mb-6">
+              <Plus className="w-8 h-8 text-cyan-700" />
             </div>
             <h2 className="text-xl font-semibold mb-2">No wallets yet</h2>
             <p className="text-[var(--text-secondary)] mb-8">Create or import a wallet to get started</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/wallet/create"
-                className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl gradient-accent text-slate-900 font-semibold shadow-lg shadow-cyan-500/20 hover:opacity-90 transition"
+                className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl gradient-accent font-semibold shadow-lg shadow-cyan-700/20 hover:opacity-90 transition"
               >
                 <Plus className="w-5 h-5" />
                 Create Wallet
               </Link>
               <Link
                 to="/wallet/import"
-                className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-[var(--border)] text-[var(--text-primary)] hover:bg-[var(--bg-card)] hover:border-cyan-500/30 transition font-medium"
+                className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-[var(--border)] text-[var(--text-primary)] hover:bg-[var(--bg-input)] hover:border-cyan-600/30 transition font-medium"
               >
                 <Download className="w-5 h-5" />
                 Import Wallet
@@ -137,20 +147,28 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="bg-[var(--bg-card)] rounded-2xl p-8 border border-[var(--border)] mb-6 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-cyan-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+          <div className="bg-[var(--bg-card)] rounded-2xl p-8 border border-[var(--border)] shadow-sm mb-6 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-cyan-200/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
             <p className="text-[var(--text-secondary)] text-sm mb-1">
               Balance — switch network if your funds are on another chain
             </p>
-            <p className="text-4xl font-bold mb-4">
+            <p className="text-4xl font-bold mb-1">
               {balanceLoading ? (
                 <span className="text-[var(--text-muted)]">Loading...</span>
               ) : balance !== null ? (
-                <span>{parseFloat(formatEther(balance)).toFixed(6)} <span className="text-cyan-400">{chainInfo?.symbol || 'ETH'}</span></span>
+                <span>{parseFloat(formatEther(balance)).toFixed(6)} <span className="text-cyan-700">{chainInfo?.symbol || 'ETH'}</span></span>
               ) : (
                 <span>— {chainInfo?.symbol || 'ETH'}</span>
               )}
             </p>
+            {balance !== null && usdPrice !== null && (
+              <p className="text-lg text-[var(--text-secondary)] mb-3">
+                ≈ ${(parseFloat(formatEther(balance)) * usdPrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
+              </p>
+            )}
+            {balance !== null && usdPrice === null && (
+              <p className="text-sm text-[var(--text-muted)] mb-3">USD price unavailable</p>
+            )}
             {balanceError && <p className="text-[var(--error)] text-sm mt-1">{balanceError}</p>}
             <div className="flex items-center gap-2 flex-wrap">
               <code className="text-sm text-[var(--text-muted)] font-mono bg-[var(--bg-input)] px-3 py-2 rounded-lg">
@@ -158,7 +176,7 @@ export function Dashboard() {
               </code>
               <button
                 onClick={copyAddress}
-                className="p-2 rounded-lg hover:bg-[var(--bg-input)] text-[var(--text-secondary)] hover:text-cyan-400 transition"
+                className="p-2 rounded-lg hover:bg-[var(--bg-input)] text-[var(--text-secondary)] hover:text-cyan-700 transition"
                 title="Copy"
               >
                 <Copy className="w-4 h-4" />
@@ -168,7 +186,7 @@ export function Dashboard() {
                   href={`${chainInfo.explorer}/address/${selectedWallet?.address}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg hover:bg-[var(--bg-input)] text-[var(--text-secondary)] hover:text-cyan-400 transition"
+                  className="p-2 rounded-lg hover:bg-[var(--bg-input)] text-[var(--text-secondary)] hover:text-cyan-700 transition"
                   title="View on explorer"
                 >
                   <ExternalLink className="w-4 h-4" />
@@ -181,21 +199,21 @@ export function Dashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             <Link
               to="/send"
-              className="flex items-center justify-center gap-3 py-5 rounded-xl gradient-accent text-slate-900 font-semibold shadow-lg shadow-cyan-500/20 hover:opacity-90 transition"
+              className="flex items-center justify-center gap-3 py-5 rounded-xl gradient-accent font-semibold shadow-lg shadow-cyan-700/20 hover:opacity-90 transition"
             >
               <Send className="w-5 h-5" />
               Send
             </Link>
             <Link
               to="/receive"
-              className="flex items-center justify-center gap-3 py-5 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-card)] hover:border-cyan-500/30 transition font-medium"
+              className="flex items-center justify-center gap-3 py-5 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-input)] hover:border-cyan-600/30 transition font-medium"
             >
               <Download className="w-5 h-5" />
               Receive
             </Link>
             <Link
               to="/assets"
-              className="flex items-center justify-center gap-3 py-5 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-card)] hover:border-cyan-500/30 transition font-medium"
+              className="flex items-center justify-center gap-3 py-5 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-input)] hover:border-cyan-600/30 transition font-medium"
             >
               <Coins className="w-5 h-5" />
               Assets
@@ -203,8 +221,8 @@ export function Dashboard() {
           </div>
 
           <div className="flex gap-6">
-            <Link to="/wallet/create" className="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition">+ Add wallet</Link>
-            <Link to="/wallet/import" className="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition">Import wallet</Link>
+            <Link to="/wallet/create" className="text-cyan-700 hover:text-cyan-600 text-sm font-medium transition">+ Add wallet</Link>
+            <Link to="/wallet/import" className="text-cyan-700 hover:text-cyan-600 text-sm font-medium transition">Import wallet</Link>
           </div>
         </>
       )}

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { wallets } from '../api';
 import { QRCodeSVG } from 'qrcode.react';
 import { Copy, Check } from 'lucide-react';
+import { copyToClipboard } from '../utils';
 
 interface WalletData {
   id: string;
@@ -22,11 +23,13 @@ export function Receive() {
     });
   }, []);
 
-  const copyAddress = () => {
+  const copyAddress = async () => {
     if (!selectedWallet) return;
-    navigator.clipboard.writeText(selectedWallet.address);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    const ok = await copyToClipboard(selectedWallet.address);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   return (
@@ -65,7 +68,7 @@ export function Receive() {
             <code className="text-sm font-mono break-all block text-left text-[var(--text-primary)]">{selectedWallet?.address}</code>
             <button
               onClick={copyAddress}
-              className="mt-3 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[var(--bg-input)] hover:bg-cyan-500/10 text-cyan-400 font-medium transition"
+              className="mt-3 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[var(--bg-input)] hover:bg-cyan-100 text-cyan-700 font-medium transition"
             >
               {copied ? <Check className="w-4 h-4 text-[var(--success)]" /> : <Copy className="w-4 h-4" />}
               {copied ? 'Copied!' : 'Copy address'}
@@ -80,7 +83,7 @@ export function Receive() {
 
       {walletsList.length === 0 && (
         <p className="text-[var(--text-secondary)]">
-          No wallets yet. <Link to="/wallet/create" className="text-cyan-400 hover:text-cyan-300 font-medium">Create one</Link> first.
+          No wallets yet. <Link to="/wallet/create" className="text-cyan-700 hover:text-cyan-600 font-medium">Create one</Link> first.
         </p>
       )}
     </div>

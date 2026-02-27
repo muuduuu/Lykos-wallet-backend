@@ -129,14 +129,14 @@ export function Send() {
               href={`${chain.explorer}/tx/${txHash}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-cyan-400 hover:text-cyan-300 font-medium"
+              className="text-cyan-700 hover:text-cyan-600 font-medium"
             >
               View on explorer →
             </a>
           )}
           <button
             onClick={() => navigate('/')}
-            className="mt-8 w-full py-3 rounded-xl gradient-accent text-slate-900 font-semibold shadow-lg shadow-cyan-500/20"
+            className="mt-8 w-full py-3 rounded-xl gradient-accent font-semibold shadow-lg shadow-cyan-700/20"
           >
             Back to wallet
           </button>
@@ -224,7 +224,7 @@ export function Send() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 rounded-xl gradient-accent text-slate-900 font-semibold shadow-lg shadow-cyan-500/20 hover:opacity-90 disabled:opacity-50 transition"
+          className="w-full py-3 rounded-xl gradient-accent font-semibold shadow-lg shadow-cyan-700/20 hover:opacity-90 disabled:opacity-50 transition"
         >
           {loading ? 'Sending...' : 'Send'}
         </button>

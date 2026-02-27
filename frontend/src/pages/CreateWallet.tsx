@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { wallets } from '../api';
 import { Copy, Check } from 'lucide-react';
+import { copyToClipboard } from '../utils';
 
 export function CreateWallet() {
   const [password, setPassword] = useState('');
@@ -32,18 +33,20 @@ export function CreateWallet() {
     }
   };
 
-  const copyMnemonic = () => {
+  const copyMnemonic = async () => {
     if (!mnemonic) return;
-    navigator.clipboard.writeText(mnemonic);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    const ok = await copyToClipboard(mnemonic);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   if (mnemonic) {
     return (
       <div className="max-w-lg mx-auto">
-        <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 mb-6">
-          <p className="text-amber-400 font-medium mb-2">Save your recovery phrase</p>
+        <div className="bg-amber-50 border border-amber-300 rounded-xl p-4 mb-6">
+          <p className="text-amber-700 font-medium mb-2">Save your recovery phrase</p>
           <p className="text-sm text-[var(--text-secondary)]">
             Write these 12 words down and store them safely. Anyone with this phrase can access your wallet.
           </p>
@@ -59,7 +62,7 @@ export function CreateWallet() {
           </div>
           <button
             onClick={copyMnemonic}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--bg-input)] hover:bg-cyan-500/10 text-cyan-400 font-medium transition"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--bg-input)] hover:bg-cyan-100 text-cyan-700 font-medium transition"
           >
             {copied ? <Check className="w-4 h-4 text-[var(--success)]" /> : <Copy className="w-4 h-4" />}
             {copied ? 'Copied!' : 'Copy phrase'}
@@ -77,7 +80,7 @@ export function CreateWallet() {
         <button
           onClick={() => navigate('/')}
           disabled={!confirmed}
-          className="w-full py-3 rounded-xl gradient-accent text-slate-900 font-semibold shadow-lg shadow-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          className="w-full py-3 rounded-xl gradient-accent font-semibold shadow-lg shadow-cyan-700/20 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
           Done
         </button>
@@ -130,7 +133,7 @@ export function CreateWallet() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 rounded-xl gradient-accent text-slate-900 font-semibold shadow-lg shadow-cyan-500/20 hover:opacity-90 disabled:opacity-50 transition"
+          className="w-full py-3 rounded-xl gradient-accent font-semibold shadow-lg shadow-cyan-700/20 hover:opacity-90 disabled:opacity-50 transition"
         >
           {loading ? 'Creating...' : 'Create wallet'}
         </button>

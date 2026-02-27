@@ -39,7 +39,7 @@ export function ImportWallet() {
         <button
           onClick={() => setMode('mnemonic')}
           className={`flex-1 py-2.5 rounded-xl font-medium transition ${
-            mode === 'mnemonic' ? 'gradient-accent text-slate-900 shadow-lg shadow-cyan-500/20' : 'bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+            mode === 'mnemonic' ? 'gradient-accent shadow-lg shadow-cyan-700/20' : 'bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
           }`}
         >
           Recovery phrase
@@ -47,7 +47,7 @@ export function ImportWallet() {
         <button
           onClick={() => setMode('privateKey')}
           className={`flex-1 py-2.5 rounded-xl font-medium transition ${
-            mode === 'privateKey' ? 'gradient-accent text-slate-900 shadow-lg shadow-cyan-500/20' : 'bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+            mode === 'privateKey' ? 'gradient-accent shadow-lg shadow-cyan-700/20' : 'bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
           }`}
         >
           Private key
@@ -106,7 +106,7 @@ export function ImportWallet() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 rounded-xl gradient-accent text-slate-900 font-semibold shadow-lg shadow-cyan-500/20 hover:opacity-90 disabled:opacity-50 transition"
+          className="w-full py-3 rounded-xl gradient-accent font-semibold shadow-lg shadow-cyan-700/20 hover:opacity-90 disabled:opacity-50 transition"
         >
           {loading ? 'Importing...' : 'Import wallet'}
         </button>

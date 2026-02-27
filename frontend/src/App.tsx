@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { useAuth } from './context/AuthContext';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
@@ -10,23 +11,21 @@ import { Send } from './pages/Send';
 import { Receive } from './pages/Receive';
 import { Assets } from './pages/Assets';
 
-function isTokenValid(token: string | null): boolean {
-  if (!token) return false;
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return typeof payload.exp === 'number' && payload.exp * 1000 > Date.now();
-  } catch {
-    return false;
-  }
-}
-
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const token = localStorage.getItem('token');
-  if (!isTokenValid(token)) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+  const { token, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-10 h-10 border-2 border-cyan-600/30 border-t-cyan-600 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!token) {
     return <Navigate to="/login" replace />;
   }
+
   return <Layout>{children}</Layout>;
 }
 
