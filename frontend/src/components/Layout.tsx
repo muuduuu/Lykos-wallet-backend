@@ -21,9 +21,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             to="/"
             className="flex items-center gap-2 shrink-0 group"
           >
-            <img src="/Lykos.png" alt="Carbon Crowd Wallet" className="w-9 h-9 rounded-lg shadow-md shadow-cyan-500/20 group-hover:shadow-cyan-500/30 transition" />
+            <img src="/Lykos.png" alt="Lykos Wallet" className="w-9 h-9 rounded-lg shadow-md shadow-cyan-500/20 group-hover:shadow-cyan-500/30 transition" />
             <span className="text-lg font-semibold text-[var(--text-primary)] tracking-tight">
-              Carbon Crowd Wallet
+              Lykos Wallet
             </span>
           </Link>
 
@@ -65,7 +65,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </main>
 
       <footer className="border-t border-[var(--border)] py-4 text-center text-sm text-[var(--text-muted)]">
-        © Carbon Crowd Wallet - Powered by LyKos Labs 2026. All rights reserved.
+        © Lykos Wallet 2026. All rights reserved.
       </footer>
     </div>
   );

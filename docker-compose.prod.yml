@@ -1,4 +1,4 @@
-# Carbon Crowd Wallet - Production deployment
+# Lykos Wallet - Production deployment
 # Usage: set required env vars, then: docker compose -f docker-compose.prod.yml up -d
 #
 # Required env vars (create .env or export):

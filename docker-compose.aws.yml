@@ -1,4 +1,4 @@
-# Carbon Crowd Wallet — AWS (EC2 + RDS)
+# Lykos Wallet — AWS (EC2 + RDS)
 # Use when Postgres is RDS; no postgres service here.
 # Set in .env: DATABASE_URL, JWT_SECRET, CORS_ORIGIN, RPC URLs.
 

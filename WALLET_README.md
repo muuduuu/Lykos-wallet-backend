@@ -1,4 +1,4 @@
-# Carbon Crowd Wallet – Deployable Crypto Wallet
+# Lykos Wallet – Deployable Crypto Wallet
 
 A full **Ethereum wallet** you can run locally or deploy: create/import HD wallets, view balances, and send/receive ETH.
 

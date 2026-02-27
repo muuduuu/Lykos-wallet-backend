@@ -45,3 +45,8 @@ cat  .env  'EOF'.txt
 
 # Cloned site repo (separate git repo on server)
 site/
+RUN_WALLET.md
+WALLET_README.md
+PRODUCTION_CHECKLIST.md
+DEPLOYMENT_AWS.md
+DEPLOYMENT.md

@@ -63,7 +63,7 @@ fastify.get('/health', async () => ({ status: 'ok', timestamp: new Date().toISOS
 async function start() {
   try {
     await fastify.listen({ port: config.port, host: '0.0.0.0' });
-    console.log(`Carbon Crowd Wallet API running at http://localhost:${config.port}`);
+    console.log(`Lykos Wallet API running at http://localhost:${config.port}`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);

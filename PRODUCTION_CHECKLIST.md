@@ -1,4 +1,4 @@
-# Launch day checklist — Carbon Crowd Wallet
+# Launch day checklist — Lykos Wallet
 
 Use this the day you push to production.
 

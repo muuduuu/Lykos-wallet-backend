@@ -1,6 +1,6 @@
-# Carbon Crowd Wallet — Production Deployment Guide
+# Lykos Wallet — Production Deployment Guide
 
-This guide walks you through launching Carbon Crowd Wallet to the real world.
+This guide walks you through launching Lykos Wallet to the real world.
 
 ---
 

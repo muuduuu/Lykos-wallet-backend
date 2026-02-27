@@ -1,4 +1,4 @@
-// Carbon Crowd Wallet - Powered by LyKos Labs
+// Lykos Wallet
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
